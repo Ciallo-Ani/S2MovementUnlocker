@@ -17,6 +17,12 @@ IServerGameDLL* server = NULL;
 #define WIN_LINUX(win, linux) linux
 #endif
 
+const char* pPatchSignature = WIN_LINUX(
+	"F3 0F 5E D8 0F 28 C3 F3 0F 59 E3 F3 0F 59 47 ? F3 0F 59 5F ? F3 0F 11 47 ? F3 0F 11 67 ? F3 0F 11 5F ?",
+	"F3 0F 5E C8 F3 0F 59 E1 F3 0F 59 D9 F3 0F 59 CA F3 41 0F 11 65 ? F3 41 0F 11 5D ? F3 41 0F 11 4D ?");
+
+int iPatchLen = WIN_LINUX(36, 34);
+
 PLUGIN_EXPOSE(MovementUnlocker, g_MovementUnlocker);
 bool MovementUnlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
@@ -26,7 +32,7 @@ bool MovementUnlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxl
 
 	CModule libserver(server);
 
-	CMemory fn = libserver.FindPatternSIMD(WIN_LINUX("76 ? F2 0F 10 57 ? F3 0F 10 47 ? 0F 28 CA F3 0F 59 C0", "E8 ? ? ? ? 48 89 C7 E8 ? ? ? ? 5D 48 8B 00 C3"));
+	CMemory fn = libserver.FindPatternSIMD(pPatchSignature);
 	if (!fn)
 	{
 		V_strncpy(error, "Could not find \'CGamemovement::WalkMove\' patch signature!", maxlen);
@@ -36,11 +42,16 @@ bool MovementUnlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxl
 	}
 	
 	uintptr_t pPatchAddress = fn.GetPtr();
-	// META_CONPRINTF( "pPatchAddress -> %p, start value -> %x\n", reinterpret_cast<void*>(pPatchAddress), *reinterpret_cast<int8_t*>(pPatchAddress) );
+	// META_CONPRINTF( "pPatchAddress -> %p, start at -> %x\n", reinterpret_cast<void*>(pPatchAddress), *reinterpret_cast<int8_t*>(pPatchAddress) );
 
-	SourceHook::SetMemAccess((void*)pPatchAddress, 1, SH_MEM_READ | SH_MEM_WRITE | SH_MEM_EXEC);
-	*(unsigned char*)(pPatchAddress) = ((unsigned char*)"\xEB")[0];
-	SourceHook::SetMemAccess((void*)pPatchAddress, 1, SH_MEM_READ | SH_MEM_EXEC);
+	SourceHook::SetMemAccess((void*)pPatchAddress, iPatchLen, SH_MEM_READ | SH_MEM_WRITE | SH_MEM_EXEC);
+
+	for (int i = 0; i < iPatchLen; i++)
+	{
+		*(unsigned char*)(pPatchAddress + i) = ((unsigned char*)"\x90")[0];
+	}
+
+	SourceHook::SetMemAccess((void*)pPatchAddress, iPatchLen, SH_MEM_READ | SH_MEM_EXEC);
 
 	return true;
 }
