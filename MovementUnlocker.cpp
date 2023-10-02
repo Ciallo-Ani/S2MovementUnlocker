@@ -17,12 +17,6 @@ IServerGameDLL* server = NULL;
 #define WIN_LINUX(win, linux) linux
 #endif
 
-#ifdef _WIN32
-const char *pPatchPattern = "x?xxxx?xxxx?xxxxxxx";
-#elif __linux__
-const char* pPatchPattern = "x?xxxxxxxx";
-#endif
-
 PLUGIN_EXPOSE(MovementUnlocker, g_MovementUnlocker);
 bool MovementUnlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
@@ -42,12 +36,11 @@ bool MovementUnlocker::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxl
 	}
 	
 	uintptr_t pPatchAddress = fn.GetPtr();
-	META_CONPRINTF( "pPatchAddress -> %p, start value -> %x\n", reinterpret_cast<void*>(pPatchAddress), *reinterpret_cast<int8_t*>(pPatchAddress) );
-	
-	int PatchLen = strlen(pPatchPattern);
-	SourceHook::SetMemAccess((void*)pPatchAddress, PatchLen, SH_MEM_READ | SH_MEM_WRITE | SH_MEM_EXEC);
+	// META_CONPRINTF( "pPatchAddress -> %p, start value -> %x\n", reinterpret_cast<void*>(pPatchAddress), *reinterpret_cast<int8_t*>(pPatchAddress) );
+
+	SourceHook::SetMemAccess((void*)pPatchAddress, 1, SH_MEM_READ | SH_MEM_WRITE | SH_MEM_EXEC);
 	*(unsigned char*)(pPatchAddress) = ((unsigned char*)"\xEB")[0];
-	SourceHook::SetMemAccess((void*)pPatchAddress, PatchLen, SH_MEM_READ | SH_MEM_EXEC);
+	SourceHook::SetMemAccess((void*)pPatchAddress, 1, SH_MEM_READ | SH_MEM_EXEC);
 
 	return true;
 }
