@@ -17,3 +17,6 @@
 *.FileListAbsolute.txt
 *.lib
 *.exp
+*.rc
+*.filters
+*.aps

@@ -32,7 +32,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{006eb7ab-133a-493a-9fce-4236d8d2a99d}</ProjectGuid>
-    <RootNamespace>plugins</RootNamespace>
+    <RootNamespace>MovementUnlocker</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <ProjectName>MovementUnlocker</ProjectName>
   </PropertyGroup>

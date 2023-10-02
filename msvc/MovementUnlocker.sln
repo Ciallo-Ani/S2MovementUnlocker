@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugins", "plugins\plugins.vcxproj", "{006EB7AB-133A-493A-9FCE-4236D8D2A99D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MovementUnlocker", "MovementUnlocker\MovementUnlocker.vcxproj", "{006EB7AB-133A-493A-9FCE-4236D8D2A99D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
