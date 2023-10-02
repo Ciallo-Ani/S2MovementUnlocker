@@ -1,5 +1,19 @@
-msvc10/.vs
-msvc10/Release - CS GO
-Release.csgo
-libtier0.so
-libvstdlib.so
+*\.vs
+*.vsidx
+*.suo
+*.*db*
+*.ipch
+*.log
+*.tlog
+*.log
+*.lastbuildstate
+*/unsuccessfulbuild
+*.recipe
+*.obj
+*.iobj
+*.dll
+*.ilk
+*.pdb
+*.FileListAbsolute.txt
+*.lib
+*.exp
